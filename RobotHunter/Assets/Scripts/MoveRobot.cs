@@ -19,14 +19,14 @@ public class MoveRobot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButtonDown(0))
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider.gameObject.name == "Plane")
+                if (hit.collider.gameObject.tag == "move")
                 {
                     moveTarget = hit.point;
                     GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
