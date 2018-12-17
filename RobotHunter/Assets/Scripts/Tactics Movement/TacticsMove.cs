@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,11 +12,12 @@ public class TacticsMove : MonoBehaviour
 
     Tile currentTile;
 
+    public bool moving = false;
     public int move = 5;
     public float jumpHeight = 0.5f;
     public float moveSpeed = 2;
 
-    Vector3 vectocity = new Vector3();
+    Vector3 velocity = new Vector3();
     Vector3 heading = new Vector3();
 
     float halfHeight = 0;
@@ -87,5 +89,78 @@ public class TacticsMove : MonoBehaviour
         }
     }
 
+    public void MoveToTile(Tile tile)
+    {
+        path.Clear();
+        tile.target = true;
+        moving = true;
+
+        Tile next = tile;
+        while (next != null)
+        {
+            path.Push(next);
+            next = next.parent;
+        }
+    }
+
+    public void Move()
+    {
+        if (path.Count > 0)
+        {
+            Tile t = path.Peek();
+            Vector3 target = t.transform.position;
+
+            target.y += halfHeight + t.GetComponent<Collider>().bounds.extents.y;
+
+            if (Vector3.Distance(transform.position, target) >= 0.1f)
+            {
+                CalculateHeadig(target);
+                SetHorizotalVelocity();
+
+                transform.forward = heading;
+                transform.position +=velocity * Time.deltaTime;
+            }
+            else
+            {
+
+                transform.position = target;
+                path.Pop();
+            }
+        }
+        else
+        {
+            RemoveSelecTableTile();
+            moving = false;
+        }
+    }
+
+    protected void RemoveSelecTableTile()
+    {
+        if (currentTile != null)
+        {
+            currentTile.current = false;
+            currentTile = null;
+        }
+
+        foreach (Tile tile in selectableTiles)
+        {
+            tile.Reset();
+        }
+
+        selectableTiles.Clear();
+    }
+
+    private void CalculateHeadig(Vector3 target)
+    {
+        heading = target - transform.position;
+        heading.Normalize();
+    }
+
+    private void SetHorizotalVelocity()
+    {
+        velocity = heading * moveSpeed;
+
+
+    }
 }
 

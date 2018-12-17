@@ -42,7 +42,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public void Reset1()
+    public void Reset()
     {
         adjacencyList.Clear();
 
@@ -57,7 +57,7 @@ public class Tile : MonoBehaviour
 
     public void FindNeighbors(float jumpHeight)
     {
-        Reset1();
+        Reset();
 
         CheckTile(Vector3.forward, jumpHeight);
         CheckTile(-Vector3.forward, jumpHeight);
