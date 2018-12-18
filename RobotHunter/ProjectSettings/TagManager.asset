@@ -6,6 +6,7 @@ TagManager:
   tags:
   - move
   - Tile
+  - NPC
   layers:
   - Default
   - TransparentFX
